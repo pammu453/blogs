@@ -1,8 +1,52 @@
-import { Button, Label, TextInput } from "flowbite-react"
+import { useState } from "react";
+import {
+  Alert,
+  Button,
+  Label,
+  Spinner,
+  TextInput
+} from "flowbite-react"
 import { PiGitlabLogoFill } from "react-icons/pi"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const SignUp = () => {
+  const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate()
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value })
+  }
+
+  const handleSubmite = async (e) => {
+    e.preventDefault()
+    try {
+      setLoading(true)
+      setError(null)
+
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": 'application/json' },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      })
+
+      const data = await res.json()
+
+      if (data.success === false) {
+        setLoading(false)
+        return setError(data.message)
+      }
+
+      setLoading(false)
+      navigate("/sign-in")
+    } catch (error) {
+      setError(error.message)
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen mt-20">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-4">
@@ -17,24 +61,55 @@ const SignUp = () => {
         </div>
         {/* right */}
         <div className="flex-1">
-          <form className="flex flex-col gap-4">
+          <form onSubmit={handleSubmite} className="flex flex-col gap-4">
             <div>
               <Label value="Your name" color="info" />
-              <TextInput type="text" placeholder="Username" id="username" />
+              <TextInput
+                type="text"
+                onChange={handleChange}
+                placeholder="Username"
+                id="username"
+                autoComplete="off"
+                required />
             </div>
             <div>
               <Label value="Your email" color="info" />
-              <TextInput type="email" placeholder="Email" id="email" />
+              <TextInput
+                type="email"
+                onChange={handleChange}
+                placeholder="Email"
+                id="email"
+                autoComplete="off"
+                required />
             </div>
             <div>
               <Label value="Your password" color="info" />
-              <TextInput type="password" placeholder="Password" id="password" />
+              <TextInput
+                type="password"
+                onChange={handleChange}
+                placeholder="Password"
+                id="password"
+                autoComplete="off"
+                required />
             </div>
-            <Button type="submit" gradientDuoTone="purpleToPink" outline>Sign Up</Button>
+            <Button type="submit" gradientDuoTone="purpleToPink" outline disabled={loading}>
+              {loading ? (
+                <>
+                  <Spinner />
+                  <span className="ml-2">Loading...</span>
+                </>
+              ) : "SignUp"
+              }
+            </Button>
           </form>
           <p className="text-center mt-2">Have an account?
             <Link to="/sign-in" className="text-blue-600 ml-1">Sign-In</Link>
           </p>
+          {error &&
+            <Alert color="failure">
+              <span className="font-medium">{error}</span>
+            </Alert>
+          }
         </div>
       </div>
     </div>
