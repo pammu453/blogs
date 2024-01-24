@@ -33,7 +33,7 @@ const FooterComponent = () => {
                         <div>
                             <FooterTitle title="About" />
                             <FooterLinkGroup col>
-                                <FooterLink href="/about">About blog's</FooterLink>
+                                <Link to="/about">About blog's</Link>
                             </FooterLinkGroup>
                         </div>
                         <div>
