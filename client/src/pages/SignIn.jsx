@@ -10,6 +10,7 @@ import { PiGitlabLogoFill } from "react-icons/pi"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux";
 import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
@@ -89,6 +90,7 @@ const SignIn = () => {
               ) : "SignIn"
               }
             </Button>
+            <OAuth/>
           </form>
           <p className="text-center mt-2">Dont't have an account?
             <Link to="/sign-up" className="text-blue-600 ml-1">Sign-Up</Link>

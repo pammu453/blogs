@@ -8,6 +8,7 @@ import {
 } from "flowbite-react"
 import { PiGitlabLogoFill } from "react-icons/pi"
 import { Link, useNavigate } from "react-router-dom"
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
@@ -101,6 +102,7 @@ const SignUp = () => {
               ) : "SignUp"
               }
             </Button>
+            <OAuth/>
           </form>
           <p className="text-center mt-2">Have an account?
             <Link to="/sign-in" className="text-blue-600 ml-1">Sign-In</Link>
