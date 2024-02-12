@@ -1,9 +1,10 @@
 import express from 'express'
 
-import { test } from '../controllers/user.controler.js'
+import { updateUser } from '../controllers/user.controler.js'
+import { varifyToken } from '../utlis/varifyUser.js'
 
 const router = express.Router()
 
-router.get("/", test)
+router.put("/updateUser/:userId", varifyToken, updateUser)
 
 export default router
