@@ -13,9 +13,6 @@ export const updateUser = async (req, res, next) => {
         req.body.password = bcryptjs.hashSync(req.body.password, 10)
     }
     if (req.body.username) {
-        if (await User.findOne({username:req.body.username})) {
-            return next(errorHandler(400, "User already exist with this username"))
-        }
         if (req.body.username.length < 7 || req.body.username.length > 20) {
             return next(errorHandler(400, "Username must be at least 7 to 20 characters"))
         }
@@ -30,9 +27,6 @@ export const updateUser = async (req, res, next) => {
         }
     }
     if (req.body.email) {
-        if (await User.findOne({email:req.body.email})) {
-            return next(errorHandler(400, "User already exist with this email"))
-        }
         if (!req.body.email.match(/^[a-zA-Z0-9._%+-]+@gmail.com$/)) {
             return next(errorHandler(400, "Enter valid gmail"))
         }
