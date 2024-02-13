@@ -5,10 +5,10 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../firebase'
 import { updateStart, udpateSuccess, updateFailure, deleteStart, deleteSuccess, deleteFailure, signOutSucess } from '../redux/user/userSlice'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const DashProfile = () => {
-  const { currentUser } = useSelector(state => state.user)
+  const { currentUser, loading } = useSelector(state => state.user)
 
   const [imageFile, setImageFile] = useState(null);
   const [imageFileURL, setImageFileURL] = useState(null);
@@ -183,9 +183,19 @@ const DashProfile = () => {
           placeholder='password'
           onChange={handleChange}
         />
-        <Button type='submit' gradientDuoTone='purpleToBlue' outline disabled={disableBotton}>
-          Update
+        <Button type='submit' gradientDuoTone='purpleToBlue' outline disabled={disableBotton || loading}>
+          {loading ? "Loading..." : "Update"}
         </Button>
+
+        {
+          currentUser.isAdmin && (
+            <Link to={"/create-post"}>
+              <Button type='button' className='w-full' gradientDuoTone='purpleToPink' >
+                Create Post
+              </Button>
+            </Link>
+          )
+        }
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span onClick={() => setOpenModal(true)} className='cursor-pointer'>Delete Account</span>
