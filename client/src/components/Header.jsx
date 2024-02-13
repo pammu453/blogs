@@ -1,16 +1,42 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation,useNavigate } from "react-router-dom"
 import { AiOutlineSearch, } from 'react-icons/ai'
 import { FaMoon, FaSun } from 'react-icons/fa'
 import { PiGitlabLogoFill } from "react-icons/pi";
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleTheme } from "../redux/theme/themeSlice";
+import { signOutSucess } from "../redux/user/userSlice";
 
 const Header = () => {
     const path = useLocation().pathname
     const dispatch = useDispatch()
+    const navigate=useNavigate()
     const { theme } = useSelector(state => state.theme)
     const { currentUser } = useSelector((state) => state.user)
+
+    const handleSignOut = async () => {
+        try {
+            const res = await fetch("/api/user/signOutUser", {
+                method: "POST",
+                headers: { "Content-Type": 'application/json' },
+                credentials: "include"
+            })
+            const data = await res.json()
+
+            if (data.success === false) {
+                console.log(error)
+            }
+
+            if (res.ok) {
+                dispatch(signOutSucess())
+                navigate("/sign-in")
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
     return (
         <Navbar className="border-b-2">
             <Link to="/" className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white">
@@ -50,7 +76,7 @@ const Header = () => {
                                 <Dropdown.Item>Profile</Dropdown.Item>
                             </Link>
                             <Dropdown.Divider />
-                            <Dropdown.Item>Sign out</Dropdown.Item>
+                            <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
                         </Dropdown>
                     ) : (
                         <Link to="/sign-in">

@@ -3,9 +3,9 @@ import { TextInput, Button, Alert, Modal } from 'flowbite-react'
 import { useEffect, useRef, useState } from 'react'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase'
-import { updateStart, udpateSuccess, updateFailure,deleteStart,deleteSuccess,deleteFailure } from '../redux/user/userSlice'
-import {HiOutlineExclamationCircle} from 'react-icons/hi'
-import {useNavigate} from 'react-router-dom'
+import { updateStart, udpateSuccess, updateFailure, deleteStart, deleteSuccess, deleteFailure, signOutSucess } from '../redux/user/userSlice'
+import { HiOutlineExclamationCircle } from 'react-icons/hi'
+import { useNavigate } from 'react-router-dom'
 
 const DashProfile = () => {
   const { currentUser } = useSelector(state => state.user)
@@ -22,7 +22,7 @@ const DashProfile = () => {
 
   const filePickerRef = useRef()
   const dispatch = useDispatch()
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
@@ -98,9 +98,9 @@ const DashProfile = () => {
     }
   }
 
-  const deleteUser=async()=>{
+  const deleteUser = async () => {
     setOpenModal(false)
-     try {
+    try {
       dispatch(deleteStart())
       const res = await fetch(`/api/user/deleteUser/${currentUser._id}`, {
         method: "DELETE",
@@ -108,7 +108,7 @@ const DashProfile = () => {
         credentials: "include"
       })
       const data = await res.json()
-      
+
       if (data.success === false) {
         return setError(data.message)
       }
@@ -118,9 +118,31 @@ const DashProfile = () => {
         navigate("/sign-in")
       }
 
-     } catch (error) {
+    } catch (error) {
       setError("Something went wrong!")
-     }
+    }
+  }
+
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch("/api/user/signOutUser", {
+        method: "POST",
+        headers: { "Content-Type": 'application/json' },
+        credentials: "include"
+      })
+      const data = await res.json()
+
+      if (data.success === false) {
+        setError("Something went wrong!")
+      }
+
+      if (res.ok) {
+        dispatch(signOutSucess())
+        navigate("/sign-in")
+      }
+    } catch (error) {
+      setError("Something went wrong!")
+    }
   }
 
   return (
@@ -167,7 +189,7 @@ const DashProfile = () => {
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span onClick={() => setOpenModal(true)} className='cursor-pointer'>Delete Account</span>
-        <span className='cursor-pointer'>Sign Out</span>
+        <span onClick={handleSignOut} className='cursor-pointer'>Sign Out</span>
       </div>
       {
         error && <Alert color="failure">
