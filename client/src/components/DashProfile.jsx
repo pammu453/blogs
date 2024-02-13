@@ -1,12 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { TextInput, Button, Alert } from 'flowbite-react'
+import { TextInput, Button, Alert, Modal } from 'flowbite-react'
 import { useEffect, useRef, useState } from 'react'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase'
-import { updateStart, udpateSuccess, updateFailure } from '../redux/user/userSlice'
+import { updateStart, udpateSuccess, updateFailure,deleteStart,deleteSuccess,deleteFailure } from '../redux/user/userSlice'
+import {HiOutlineExclamationCircle} from 'react-icons/hi'
+import {useNavigate} from 'react-router-dom'
 
 const DashProfile = () => {
-  const { currentUser} = useSelector(state => state.user)
+  const { currentUser } = useSelector(state => state.user)
 
   const [imageFile, setImageFile] = useState(null);
   const [imageFileURL, setImageFileURL] = useState(null);
@@ -16,9 +18,11 @@ const DashProfile = () => {
   const [udpatedSuccessfully, setudpatedSuccessfully] = useState(null);
   const [error, setError] = useState(null);
   const [disableBotton, setDisableBotton] = useState(false);
-  
+  const [openModal, setOpenModal] = useState(false);
+
   const filePickerRef = useRef()
   const dispatch = useDispatch()
+  const navigate=useNavigate()
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
@@ -94,6 +98,31 @@ const DashProfile = () => {
     }
   }
 
+  const deleteUser=async()=>{
+    setOpenModal(false)
+     try {
+      dispatch(deleteStart())
+      const res = await fetch(`/api/user/deleteUser/${currentUser._id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": 'application/json' },
+        credentials: "include"
+      })
+      const data = await res.json()
+      
+      if (data.success === false) {
+        return setError(data.message)
+      }
+
+      if (res.ok) {
+        dispatch(deleteSuccess())
+        navigate("/sign-in")
+      }
+
+     } catch (error) {
+      setError("Something went wrong!")
+     }
+  }
+
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='my-7 text-center font-semibold text-3xl text-slate-300'>Profile</h1>
@@ -137,7 +166,7 @@ const DashProfile = () => {
         </Button>
       </form>
       <div className="text-red-500 flex justify-between mt-5">
-        <span className='cursor-pointer'>Delete Account</span>
+        <span onClick={() => setOpenModal(true)} className='cursor-pointer'>Delete Account</span>
         <span className='cursor-pointer'>Sign Out</span>
       </div>
       {
@@ -150,6 +179,25 @@ const DashProfile = () => {
           {udpatedSuccessfully}
         </Alert>
       }
+      <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete this product?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={deleteUser}>
+                {"Yes, I'm sure"}
+              </Button>
+              <Button color="gray" onClick={() => setOpenModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
