@@ -6,6 +6,10 @@ export const createPost = async (req, res, next) => {
         return next(errorHandler(403, "You are not allowed to create a post"))
     }
 
+    if (await Post.findOne({ title: req.body.title })) {
+        return next(errorHandler(403, "Post exist with this title"))
+    }
+
     if (!req.body.title || !req.body.content) {
         return next(errorHandler(403, "Please provide all the fields"))
     }
