@@ -68,6 +68,8 @@ const Header = () => {
                                     img={currentUser.profilePicture
                                     }
                                     rounded
+                                    bordered
+                                    status="online"
                                 />
                             }
                         >
