@@ -10,7 +10,8 @@ const CreatePost = () => {
                 <div className='flex justify-around gap-2'>
                     <TextInput type='text' placeholder='Title' required id='title' className='flex-1' />
                     <Select id="categories" required className='flex-1' >
-                        <option defaultValue={"MERN/MEAN"}>MERN/MEAN</option>
+                        <option value='uncategorized'>Select a category</option>
+                        <option value={"MERN/MEAN"}>MERN/MEAN</option>
                         <option value={"NodeJS"}>NodeJS</option>
                         <option value={"ExpressJS"}>ExpressJS</option>
                         <option value={"MongoDB"}>MongoDB</option>
@@ -26,7 +27,7 @@ const CreatePost = () => {
                     <FileInput type="file" accept='image/*' className='w-full flex' required />
                     <Button outline gradientDuoTone="purpleToPink" className='text-nowrap'>Upload Image</Button>
                 </div>
-                <ReactQuill theme="snow" className='h-48 md:h-64 mb-4' required />
+                <ReactQuill theme="snow" className='h-48 md:h-64 mb-4' required placeholder='Write Something...' />
                 <Button type='submit' gradientDuoTone="purpleToPink" className='mt-4'>Publish</Button>
             </form>
         </div>
