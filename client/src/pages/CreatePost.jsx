@@ -1,8 +1,56 @@
-import { FileInput, Select, TextInput, Button } from 'flowbite-react'
+import { FileInput, Select, TextInput, Button, Alert } from 'flowbite-react'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
+import { app } from '../firebase'
+import { useState } from 'react';
 
 const CreatePost = () => {
+    const [imageFile, setImageFile] = useState(null);
+    const [imageFileURL, setImageFileURL] = useState(null);
+    const [imageFileUploadError, setImageFileUploadError] = useState(null);
+    const [disbleButton, setDisableBotton] = useState(false);
+    const [imageFileUploadingProgress, setImageFileUploadingProgress] = useState();
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0]
+        setImageFileUploadError(null)
+        setImageFileUploadingProgress(null)
+        setImageFile(file)
+        setImageFileURL(URL.createObjectURL(file))
+    }
+
+    const uploadImage = async () => {
+        if (!imageFile) {
+            setImageFileUploadError("Please select the image")
+        }
+        const storage = getStorage(app)
+        const fileName = new Date().getTime() + imageFile.name
+        const storageRef = ref(storage, fileName)
+        const uploadTask = uploadBytesResumable(storageRef, imageFile)
+        setImageFileUploadError(null)
+        setDisableBotton(true)
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                let percent = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+                setImageFileUploadingProgress(percent.toFixed(0))
+            },
+            (error) => {
+                setImageFileUploadingProgress(null)
+                setImageFileUploadError("Could not upload image (max size 2MB ade Image Only)")
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downlodURL) => {
+                    setImageFileURL(downlodURL)
+                    setDisableBotton(false)
+                })
+            }
+        )
+    }
+
+    console.log(imageFileURL)
+
     return (
         <div className="p-3 max-w-3xl mx-auto min-h-screen">
             <h1 className="text-center text-3xl my-7 font-semibold">Create a Post</h1>
@@ -23,12 +71,23 @@ const CreatePost = () => {
                         <option value={"Database"}>Database</option>
                     </Select>
                 </div>
+                {
+                    imageFileURL && (
+                        <>
+                            <img src={imageFileURL} accept="image/*" alt='Post image' className='max-h-52 object-cover' />
+                            <span className='text-center text-green-500'>{imageFileUploadingProgress && imageFileUploadingProgress + "% uploaded"}</span>
+                        </>
+                    )
+                }
+                {
+                    imageFileUploadError && <Alert color="failure">{imageFileUploadError}</Alert>
+                }
                 <div className="flex flex-col md:flex-row justify-between items-center border-2  border-dashed border-teal-400 p-3 gap-3">
-                    <FileInput type="file" accept='image/*' className='w-full flex' required />
-                    <Button outline gradientDuoTone="purpleToPink" className='text-nowrap'>Upload Image</Button>
+                    <FileInput onChange={handleImageChange} type="file" accept='image/*' className='w-full flex' required />
+                    <Button outline gradientDuoTone="purpleToPink" className='text-nowrap' onClick={uploadImage} disabled={disbleButton}>Upload Image</Button>
                 </div>
                 <ReactQuill theme="snow" className='h-48 md:h-64 mb-4' required placeholder='Write Something...' />
-                <Button type='submit' gradientDuoTone="purpleToPink" className='mt-4'>Publish</Button>
+                <Button type='submit' gradientDuoTone="purpleToPink" className='mt-10 md:mt-4' disabled={disbleButton}>Publish</Button>
             </form>
         </div>
     )
