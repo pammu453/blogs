@@ -91,12 +91,12 @@ const DashPosts = () => {
                         {(post.updatedAt)?.substring(0, 10)}
                       </Table.Cell>
                       <Table.Cell>
-                        <Link to={`${post.slug}`}>
+                        <Link to={`/post/${post.slug}`}>
                           <Avatar img={post.image} bordered size="md" className='float-start' />
                         </Link>
                       </Table.Cell>
                       <Table.Cell>
-                        <Link to={`${post.slug}`}>
+                        <Link to={`/post/${post.slug}`}>
                           {post.title}
                         </Link>
                       </Table.Cell>

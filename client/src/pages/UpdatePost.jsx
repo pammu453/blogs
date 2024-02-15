@@ -115,6 +115,7 @@ const UpdatePost = () => {
                         className='flex-1'
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                         value={formData.title}
+                        required
                     />
                     <Select
                         id="categories"
