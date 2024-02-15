@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Table, Spinner, Avatar } from 'flowbite-react'
+import { Table, Spinner, Avatar, Button } from 'flowbite-react'
 import { Link } from 'react-router-dom'
 
 const DashPosts = () => {
   const { currentUser } = useSelector(state => state.user)
   const [userPosts, setUserPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showMore, setShowMore] = useState(true);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -17,13 +18,34 @@ const DashPosts = () => {
         if (res.ok) {
           setLoading(false)
           setUserPosts(data.posts)
+          if (data.posts.length < 9) {
+            setShowMore(false)
+          }
         }
       } catch (error) {
-        console.log(error)
+        console.log(error.message)
       }
     }
     getPosts()
   }, [currentUser._id])
+
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length
+    try {
+      setLoading(true)
+      const res = await fetch(`/api/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`)
+      const data = await res.json()
+      if (res.ok) {
+        setLoading(false)
+        setUserPosts((prev) => [...prev, ...data.posts])
+        if (data.posts.length < 9) {
+          setShowMore(false)
+        }
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <div className="table-auto overflow-x-auto p-2 w-full">
@@ -44,7 +66,7 @@ const DashPosts = () => {
                   <Table.Body key={post._id} className="divide-y p-2">
                     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        {(post.updatedAt).substring(0, 10)}
+                        {(post.updatedAt)?.substring(0, 10)}
                       </Table.Cell>
                       <Table.Cell>
                         <Link to={`${post.slug}`}>
@@ -68,6 +90,13 @@ const DashPosts = () => {
                 ))
               }
             </Table >
+            {
+              showMore && (
+                <span onClick={handleShowMore} className='text-teal-500 flex justify-center mt-2 hover:cursor-pointer'>
+                  Show more
+                </span>
+              )
+            }
           </>
         ) : (
           <p className='text-center mt-10' hidden={loading}>You don't have the posts now </p>
