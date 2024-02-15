@@ -102,10 +102,22 @@ export const getUsers = async (req, res, next) => {
         })
 
         res.status(200).json({
-            usersWithoutPassword,
+            users: usersWithoutPassword,
             totalUsers,
             lastMonthUsers
         })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const adminDeleteUser = async (req, res, next) => {
+    if (!req.user.isAdmin || req.user.userId !== req.params.adminId) {
+        return next(errorHandler(403, "You are not allowed to delete this user"))
+    }
+    try {
+        await User.findByIdAndDelete(req.params.userId)
+        res.status(200).json({ message: "User deleted" })
     } catch (error) {
         next(error)
     }

@@ -1,6 +1,6 @@
 import { Sidebar } from 'flowbite-react'
 import { useEffect, useState } from 'react';
-import { HiUser, HiArrowSmRight, HiDocumentText } from 'react-icons/hi'
+import { HiUser, HiArrowSmRight, HiDocumentText, HiUsers } from 'react-icons/hi'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { signOutSucess } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,15 +49,20 @@ const DashSidebar = () => {
                             Profile
                         </Sidebar.Item>
                     </Link>
-                    {
-                        currentUser.isAdmin && (
-                            <Link to={'/dashboard?tab=posts'}>
-                                <Sidebar.Item as={"div"} active={tab === "posts"} icon={HiDocumentText} labelColor="dark">
-                                    Posts
-                                </Sidebar.Item>
-                            </Link>
-                        )
-                    }
+                    {currentUser.isAdmin && (
+                        <Link to={'/dashboard?tab=posts'}>
+                            <Sidebar.Item as={"div"} active={tab === "posts"} icon={HiDocumentText} labelColor="dark">
+                                Posts
+                            </Sidebar.Item>
+                        </Link>
+                    )}
+                    {currentUser.isAdmin && (
+                        <Link to={'/dashboard?tab=users'}>
+                            <Sidebar.Item as={"div"} active={tab === "users"} icon={HiUsers} labelColor="dark">
+                                Users
+                            </Sidebar.Item>
+                        </Link>
+                    )}
                     <Sidebar.Item onClick={handleSignOut} icon={HiArrowSmRight} className="cursor-pointer">
                         Sign Out
                     </Sidebar.Item>
