@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Loader from '../components/Loader';
 import { Button } from 'flowbite-react';
+import CommentSction from '../components/CommentSction';
 
 const PostPage = () => {
     const { postSlug } = useParams()
@@ -43,14 +44,14 @@ const PostPage = () => {
                     <Button className='gray' pill size="xs">{post.category}</Button>
                 </Link>
                 <img src={post.image} alt={post.title} className='mt-10 p-3 max-h-[500px] w-full object-cover'/>
-                <div className='flex justify-between p-3 border-b border-slate-500 w-full text-sm mx-auto max-w-2xl'>
+                <div className='flex justify-between p-3 border-b border-slate-500 w-full text-sm mx-auto '>
                     <span>{post.updatedAt.substring(0,10)}</span>
                     <span className='italic'>{(post.content.length /1000).toFixed(0)} mins read</span>
                 </div>
                 <div className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{__html:post.content}}></div>
-                <div className='p-3 border-b border-slate-500  mt-3 mb-2'>
-                </div>
-                <p className='italic flex justify-center w-full text-center'>End of blog</p>
+                <p className='italic flex justify-center w-full text-center mt-1'>End of blog</p>
+                <div className='flex justify-between p-3 border-b border-slate-500 w-full text-sm mx-auto max-w-2xl'></div>
+                <CommentSction postId={post._id}/>
             </>
         )}
     </main>
