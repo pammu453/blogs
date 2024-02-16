@@ -48,6 +48,9 @@ const PostPage = () => {
                     <span className='italic'>{(post.content.length /1000).toFixed(0)} mins read</span>
                 </div>
                 <div className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{__html:post.content}}></div>
+                <div className='p-3 border-b border-slate-500  mt-3 mb-2'>
+                </div>
+                <p className='italic flex justify-center w-full text-center'>End of blog</p>
             </>
         )}
     </main>
