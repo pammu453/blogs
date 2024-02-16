@@ -66,13 +66,25 @@
   color: red;
 }
 
-.post-content pre{
-    background-color: #23241f;
-    color: #f8f8f2;
-    overflow: visible;
-    text-wrap: wrap;
-    border-radius: 10px;
+.post-content pre {
+  font-size: 20px;
+  border: 2px solid grey;
+  border-radius: 5px;
+  border-left: 12px solid green;
+  line-height: 1.2em;
+  background: linear-gradient(180deg, #4e4d4d 0, #4e4a4a 1.2em, #4b4848 0);
+  background-size: 2.4em 2.4em;
+  background-origin: content-box;
+  padding: 0 20px;
+  text-align: left;
+  font-family: calibri, arial, sans-serif;
+  text-wrap: wrap;
 }
-.post-content pre link{
-    padding: 2px;
+
+.post-content pre link {
+  padding: 2px;
+}
+
+.light pre {
+  color: black;
 }

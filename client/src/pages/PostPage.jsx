@@ -42,7 +42,7 @@ const PostPage = () => {
                 <Link to={`/search?category=${post.category}`} className='self-center mt-5'>
                     <Button className='gray' pill size="xs">{post.category}</Button>
                 </Link>
-                <img src={post.image} alt={post.title} className='mt-10 p-3 max-h-[600px] w-full object-cover'/>
+                <img src={post.image} alt={post.title} className='mt-10 p-3 max-h-[500px] w-full object-cover'/>
                 <div className='flex justify-between p-3 border-b border-slate-500 w-full text-sm mx-auto max-w-2xl'>
                     <span>{post.updatedAt.substring(0,10)}</span>
                     <span className='italic'>{(post.content.length /1000).toFixed(0)} mins read</span>
