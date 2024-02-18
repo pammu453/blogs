@@ -1,7 +1,7 @@
 import { Alert, Button, Textarea } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Comment from './Comment'
 
 const CommentSction = ({ postId }) => {
@@ -10,6 +10,7 @@ const CommentSction = ({ postId }) => {
     const [commentError, setCommentError] = useState(false);
     const [comments, setComments] = useState([]);
 
+    const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -26,7 +27,7 @@ const CommentSction = ({ postId }) => {
             } else {
                 setComment("")
                 setCommentError(null)
-                setComments([data,...comments])
+                setComments([data, ...comments])
             }
         } catch (error) {
             setCommentError("Unable to post a comment")
@@ -48,10 +49,38 @@ const CommentSction = ({ postId }) => {
         getComments()
     }, [postId])
 
+    const likeHandler = async (commentId) => {
+        try {
+            if (!currentUser) {
+                navigate("/sign-in")
+                return
+            }
+            const res = await fetch(`/api/comment/likeComment/${commentId}`, {
+                method: "PUT",
+                headers: { "Content-Type": 'application/json' },
+                credentials: "include",
+            })
+
+            const data = await res.json()
+            setComments(comments.map((comment) => {
+                if (comment._id === commentId) {
+                    return {
+                        ...comment,
+                        likes: data.likes,
+                        numberOfLikes: data.likes.length
+                    };
+                }
+                return comment;
+            }));
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <div className='max-w-2xl mx-auto w-full p-3'>
             {
-                true ? (
+                currentUser ? (
                     <div className="flex items-center gap-1 my-5 text-gray-500 text-sm">
                         <p>Signed in as :</p>
                         <img className='w-5 h-5 rounded-full bg-gray-200' src={currentUser.profilePicture} alt="" />
@@ -60,8 +89,8 @@ const CommentSction = ({ postId }) => {
                         </Link>
                     </div>
                 ) : (
-                    <div className="flex gap-2 text-teal-400 text-sm">
-                        You must be signed in to comment.
+                    <div className="flex flex-col md:flex-row gap-2 text-teal-400 text-sm">
+                        You must be signed in to comment and like the comment.
                         <Link to={"/sign-in"} className='text-blue-400 hover:underline'>Sign in</Link>
                     </div>
                 )
@@ -94,7 +123,7 @@ const CommentSction = ({ postId }) => {
                     </div>
                     {
                         comments.map((comment) => (
-                            <Comment key={comment._id} comment={comment}/>
+                            <Comment key={comment._id} comment={comment} onLike={likeHandler} />
                         ))
                     }
 
