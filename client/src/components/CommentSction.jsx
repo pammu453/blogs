@@ -83,6 +83,12 @@ const CommentSction = ({ postId }) => {
         )
     }
 
+    const deleteHandler = (commentId) => {
+        setComments(
+            comments.filter((c) => c._id !== commentId)
+        )
+    }
+
     return (
         <div className='max-w-2xl mx-auto w-full p-3'>
             {
@@ -129,7 +135,7 @@ const CommentSction = ({ postId }) => {
                     </div>
                     {
                         comments.map((comment) => (
-                            <Comment key={comment._id} comment={comment} onLike={likeHandler} onEdit={editHandler}/>
+                            <Comment key={comment._id} comment={comment} onLike={likeHandler} onEdit={editHandler} onDelete={deleteHandler} />
                         ))
                     }
 
