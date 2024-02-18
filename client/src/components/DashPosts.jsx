@@ -59,7 +59,7 @@ const DashPosts = () => {
         credentials: "include"
       })
       setUserPosts(userPosts.filter((post) => post._id !== postId))
-      const data=await res.json()
+      const data = await res.json()
       if (data.success === false) {
         console.log(data.message)
       }
@@ -96,8 +96,8 @@ const DashPosts = () => {
                         </Link>
                       </Table.Cell>
                       <Table.Cell>
-                        <Link to={`/post/${post.slug}`}>
-                          {post.title}
+                        <Link to={`/post/${post.slug}`} className='text-nowrap'>
+                          {post.title.length > 10 ? post.title.substring(0, 10) + "..." : post.title}
                         </Link>
                       </Table.Cell>
                       <Table.Cell>{post.category}</Table.Cell>

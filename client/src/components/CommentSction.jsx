@@ -115,6 +115,7 @@ const CommentSction = ({ postId }) => {
                         maxLength="200"
                         onChange={(e) => setComment(e.target.value)}
                         value={comment}
+                        required
                     />
                     <div className='flex items-center justify-between mt-3'>
                         <p className='italic text-sm'>{200 - comment.length} charecters remaining</p>

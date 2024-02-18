@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { Textarea, Button, Modal } from 'flowbite-react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
-const Comment = ({ comment, onLike, onEdit,onDelete }) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }) => {
     const [user, setUser] = useState({});
     const [editing, setEditing] = useState(false);
     const [editedContent, setEditedContent] = useState("");
@@ -91,7 +91,7 @@ const Comment = ({ comment, onLike, onEdit,onDelete }) => {
                         />
                         <div className='flex flex-row-reverse mt-1 gap-1'>
                             <Button type='submit' gradientDuoTone="purpleToBlue" outline onClick={() => setEditing(false)}>Cancel</Button>
-                            <Button type='submit' gradientDuoTone="purpleToBlue" onClick={handleSave}>Save</Button>
+                            <Button type='submit' gradientDuoTone="purpleToBlue" onClick={handleSave} disabled={editedContent.length === 0}>Save</Button>
                         </div>
                     </>
                 ) : (
@@ -125,7 +125,7 @@ const Comment = ({ comment, onLike, onEdit,onDelete }) => {
                                 currentUser && (currentUser._id === comment.userId || currentUser.isAdmin) && (
                                     <button
                                         type='button'
-                                        onClick={() => setOpenModal(true)} className='hover:text-blue-500'>
+                                        onClick={() => setOpenModal(true)} className='hover:text-pink-700'>
                                         Delete
                                     </button>
                                 )

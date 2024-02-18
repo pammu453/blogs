@@ -34,24 +34,24 @@ const PostPage = () => {
     }, [postSlug])
 
     if (loading) return <Loader />
-    if(error) return <h2 className='text-3xl flex justify-center items-center font-serif max-w-2xl mx-auto lg:text-4xl  min-h-screen'>Unable to load the blog</h2>
+    if (error) return <h2 className='text-3xl flex justify-center items-center font-serif max-w-2xl mx-auto lg:text-4xl  min-h-screen'>Unable to load the blog</h2>
 
     return <main className='p-3 flex flex-col max-w-6xl mx-auto min-h-screen'>
         {post && (
             <>
-                <h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl'>{post.title}</h1>
+                <h1 className='text-3xl mt-10 p-3 text-center italic max-w-2xl mx-auto lg:text-4xl'>{post.title}</h1>
                 <Link to={`/search?category=${post.category}`} className='self-center mt-5'>
                     <Button className='gray' pill size="xs">{post.category}</Button>
                 </Link>
-                <img src={post.image} alt={post.title} className='mt-10 p-3 max-h-[500px] w-full object-cover'/>
+                <img src={post.image} alt={post.title} className='mt-10 p-3 max-h-[400px] w-full object-cover' />
                 <div className='flex justify-between p-3 border-b border-slate-500 w-full text-sm mx-auto '>
-                    <span>{post.updatedAt.substring(0,10)}</span>
-                    <span className='italic'>{(post.content.length /1000).toFixed(0)} mins read</span>
+                    <span>{post.updatedAt.substring(0, 10)}</span>
+                    <span className='italic'>{(post.content.length / 1000).toFixed(0)} mins read</span>
                 </div>
-                <div className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{__html:post.content}}></div>
+                <div className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{ __html: post.content }}></div>
                 <p className='italic flex justify-center w-full text-center mt-1'>End of blog</p>
                 <div className='flex justify-between p-3 border-b border-slate-500 w-full text-sm mx-auto max-w-2xl'></div>
-                <CommentSction postId={post._id}/>
+                <CommentSction postId={post._id} />
             </>
         )}
     </main>
