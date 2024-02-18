@@ -68,7 +68,7 @@
 
 .post-content pre {
   background-color: #f8f5f5;
-  border: 2px solid #ddd;
+  border: 1px solid #ddd;
   border-radius: 5px;
   padding: 20px;
   overflow-x: auto;
@@ -79,7 +79,7 @@
 }
 
 .dark .post-content pre{
-  background-color: #000000;
+  background-color: #374151;
   color: #ffffff;
   padding: 20px;
   border-radius: 8px;
