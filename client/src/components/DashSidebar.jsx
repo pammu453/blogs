@@ -4,6 +4,7 @@ import { HiUser, HiArrowSmRight, HiDocumentText, HiUsers, HiChat } from 'react-i
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { signOutSucess } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { RxDashboard } from 'react-icons/rx'
 
 const DashSidebar = () => {
     const location = useLocation()
@@ -49,6 +50,13 @@ const DashSidebar = () => {
                             Profile
                         </Sidebar.Item>
                     </Link>
+                    {currentUser.isAdmin && (
+                        <Link to={'/dashboard?tab=dash'}>
+                            <Sidebar.Item as={"div"} active={tab === "dash"} icon={RxDashboard} labelColor="dark">
+                                Dashboard
+                            </Sidebar.Item>
+                        </Link>
+                    )}
                     {currentUser.isAdmin && (
                         <Link to={'/dashboard?tab=posts'}>
                             <Sidebar.Item as={"div"} active={tab === "posts"} icon={HiDocumentText} labelColor="dark">
