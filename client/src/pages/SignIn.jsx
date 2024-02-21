@@ -78,7 +78,7 @@ const SignIn = () => {
                 onChange={handleChange}
                 placeholder="Password"
                 id="password"
-                autoComplete="off"
+                autoComplete="current-password"
                 required />
             </div>
             <Button type="submit" gradientDuoTone="purpleToPink" outline disabled={loading}>

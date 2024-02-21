@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { HiUsers, HiChat, HiDocumentText, HiArrowUp, HiOutlineUserGroup, HiArrowNarrowUp, HiAnnotation } from 'react-icons/hi'
+import {  HiDocumentText, HiOutlineUserGroup, HiArrowNarrowUp, HiAnnotation } from 'react-icons/hi'
 import { Button, Table } from 'flowbite-react'
 import { Link } from 'react-router-dom'
 import Loader from '../components/Loader'
@@ -52,7 +52,6 @@ const DashboardComponent = () => {
                 const res = await fetch(`/api/comment/getComments?limit=5`)
                 const data = await res.json()
                 if (res.ok) {
-                    console.log(data)
                     setComments(data.comments)
                     setTotalComments(data.totalComments)
                     setLastMonthComments(data.lastMonthComments)
