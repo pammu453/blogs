@@ -8,7 +8,7 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { Link, useNavigate } from 'react-router-dom'
 
 const DashProfile = () => {
-  const { currentUser, loading } = useSelector(state => state.user)
+  const { currentUser } = useSelector(state => state.user)
 
   const [imageFile, setImageFile] = useState(null);
   const [imageFileURL, setImageFileURL] = useState(null);
@@ -19,6 +19,7 @@ const DashProfile = () => {
   const [error, setError] = useState(null);
   const [disableBotton, setDisableBotton] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const filePickerRef = useRef()
   const dispatch = useDispatch()
@@ -37,6 +38,8 @@ const DashProfile = () => {
     const uploadTask = uploadBytesResumable(storageRef, imageFile)
     setimageFileUploadError(null)
     setDisableBotton(true)
+    setError(null)
+    setudpatedSuccessfully(null)
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -44,7 +47,9 @@ const DashProfile = () => {
         setImageFileUploadingProgress(percent.toFixed(0))
       },
       (error) => {
+        setudpatedSuccessfully(null)
         setimageFileUploadError("Could not upload image (max size 2MB ade Image Only)")
+        setDisableBotton(false)
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downlodURL) => {
@@ -63,6 +68,8 @@ const DashProfile = () => {
   }, [imageFile])
 
   const handleChange = (e) => {
+    setError(null)
+    setudpatedSuccessfully(null)
     setFormData({ ...formData, [e.target.id]: e.target.value })
   }
 
@@ -73,6 +80,7 @@ const DashProfile = () => {
     }
     setImageFileUploadingProgress(null)
     dispatch(updateFailure(null))
+    setLoading(true)
     try {
       dispatch(updateStart())
       const res = await fetch(`/api/user/updateUser/${currentUser._id}`, {
@@ -85,12 +93,14 @@ const DashProfile = () => {
 
       if (data.success === false) {
         setudpatedSuccessfully(null)
+        setLoading(false)
         return setError(data.message)
       }
 
       if (res.ok) {
         dispatch(udpateSuccess(data))
         setError(null)
+        setLoading(false)
         setudpatedSuccessfully("Profile updated!")
       }
     } catch (error) {

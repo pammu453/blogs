@@ -139,20 +139,20 @@ const Search = () => {
                             <TextInput placeholder='Serach...'
                                 id='searchTerm'
                                 type='text'
-                                value={sideBarData.searchTerm}
+                                value={sideBarData.searchTerm || ""}
                                 onChange={handleChange}
                             />
                         </div>
                         <div className="flex items-center gap-2">
                             <label className='font-semibold'>Sort :</label>
-                            <Select onChange={handleChange}  id='order' value={sideBarData.order}>
+                            <Select onChange={handleChange}  id='order' value={sideBarData.order || ""}>
                                 <option value="desc">Latest</option>
                                 <option value="asc">Oldest</option>
                             </Select>
                         </div>
                         <div className="flex items-center gap-2">
                             <label className='font-semibold'>Category :</label>
-                            <Select onChange={handleChange} id='category' value={sideBarData.category}>
+                            <Select onChange={handleChange} id='category' value={sideBarData.category || ""}>
                                 <option value={"uncategorized"}>Uncategorized</option>
                                 <option value={"MERN/MEAN"}>MERN/MEAN</option>
                                 <option value={"NodeJS"}>NodeJS</option>
